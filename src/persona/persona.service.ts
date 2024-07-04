@@ -110,7 +110,7 @@ export class PersonaService {
     const API_KEY = this.configService.get('geminiAPI.apiKey')
     // Create a prompt for the Gemini API
     // eslint-disable-next-line no-useless-escape
-    const prompt = `Create Persona with the following condition.\\n\\n age:${age},gender:${gender},location:${location}${!otherFeatures ? '' : ',otherFeatures:' + otherFeatures}\\n\\n Using this JSON schema:\\n\\n Persona = {\"name\": str, \"age\": str, \"gender\": str, \"location: str\", \"occupation: str\", \"hobbies: str\", \"personality: str\"}\\n\\n Return a \`Persona\`\\n      `
+    const prompt = `Create Persona with the following condition.\\n\\n age:${age},gender:${gender},location:${location}${!otherFeatures ? '' : ',otherFeatures:' + otherFeatures}\\n\\n Using this JSON schema:\\n\\n Persona = {\"name\": str, \"age\": str, \"gender\": str, \"location: str\", \"occupation: str\", \"hobbies: str\", \"personality: str\", \"currentSituation: str\"}\\n\\n Ensure that the "personality" and "currentSituation" fields are approximately 500 characters each.\\n\\n Return a \`Persona\``
 
     // Call the Gemini API to generate content
     const response = await baseHttpClient.post(
@@ -127,7 +127,7 @@ export class PersonaService {
         ],
         generationConfig: {
           response_mime_type: 'application/json',
-          temperature: 0.8,
+          temperature: 1.5,
         },
       },
       undefined,
@@ -151,9 +151,9 @@ export class PersonaService {
       const jsonPerson = JSON.parse(rowPersona)
       const validateResult = personaSchema.safeParse(jsonPerson)
       if (validateResult.success) {
-        const { name, age, gender, location, occupation, hobbies, personality } =
+        const { name, age, gender, location, occupation, hobbies, personality, currentSituation } =
           validateResult.data
-        const profile = `# Name\\n${name}\\n# Age\\n${age}\\n# Gender\\n${gender}\\n# Location\\n${location}\\n# Occupation\\n${occupation}\\n# Hobbies\\n${hobbies}\\n# personality\\n${personality}`
+        const profile = `# Name\\n${name}\\n# Age\\n${age}\\n# Gender\\n${gender}\\n# Location\\n${location}\\n# Occupation\\n${occupation}\\n# Hobbies\\n${hobbies}\\n# Personality\\n${personality}\\n# Current Situation\\n${currentSituation}`
         const chunks: string[] = []
         for (let i = 0; i < profile.length; i += 3) {
           chunks.push(profile.slice(i, i + 3))
@@ -197,6 +197,7 @@ const personaSchema = z.object({
   occupation: z.string(),
   hobbies: z.string(),
   personality: z.string(),
+  currentSituation: z.string(),
 })
 export type Persona = z.infer<typeof personaSchema>
 
