@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { PersonaModule } from './persona/persona.module'
 import { ConfigModule } from '@nestjs/config'
+import { HealthModule } from './health/health.module'
 import configuration from './config/configuration'
 
 @Module({
@@ -10,6 +11,7 @@ import configuration from './config/configuration'
       load: [configuration],
     }),
     PersonaModule,
+    HealthModule,
   ],
 })
 export class AppModule {}
