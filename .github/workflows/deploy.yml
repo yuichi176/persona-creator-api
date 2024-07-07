@@ -31,13 +31,13 @@ jobs:
 
       - name: Docker auth
         run: |-
-          gcloud auth configure-docker asia-northeast1-docker.pkg.dev --quiet
+          gcloud auth configure-docker${{ vars.REGION }}-docker.pkg.dev --quiet
 
       - name: Build image
-        run: docker build -t asia-northeast1-docker.pkg.dev/persona-creator-427912/persona-creator-repo/persona-creator-api:latest .
+        run: docker build -t ${{ vars.REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REPO }}/${{ vars.SERVICE_NAME }}:${{ github.sha }} .
 
       - name: Push image
-        run: docker push asia-northeast1-docker.pkg.dev/persona-creator-427912/persona-creator-repo/persona-creator-api:latest
+        run: docker push ${{ vars.REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REPO }}/${{ vars.SERVICE_NAME }}:${{ github.sha }}
 #      - name: Create Service Declaration
 #
 #      - name: Deploy to Cloud Run
