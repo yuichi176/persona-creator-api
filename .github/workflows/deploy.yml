@@ -47,5 +47,6 @@ jobs:
           gcloud run deploy ${{ vars.SERVICE_NAME }} \
           --image ${{ env.IMAGE }} \
           --region ${{ vars.REGION }} \
+          --service-account=${{ vars.SERVICE_ACCOUNT }} \
           --set-env-vars=GEMINI_API_BASE_URL=https://generativelanguage.googleapis.com \
           --set-secrets=GEMINI_API_KEY=gemini-api-key:1
